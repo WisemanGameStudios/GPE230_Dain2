@@ -14,10 +14,29 @@ class GPE230_DAIN2_API AMazeCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AMazeCharacter();
+	
+	// Starting Health
+	UPROPERTY(EditAnywhere)
+	float maxHealth;
 
 protected:
+	// Current health of player
+	float _currentHealth;
+	
+	// Controls how fast our character moves.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float _moveSpeed = 600.0f;
+
+	// Controls how fast our character rotates.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float _rotationSpeed = 100.0f;
+	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+	
+	virtual void Die();
 
 public:	
 	// Called every frame

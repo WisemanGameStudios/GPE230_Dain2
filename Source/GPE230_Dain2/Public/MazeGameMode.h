@@ -18,7 +18,7 @@ class GPE230_DAIN2_API AMazeGameMode : public AGameModeBase
 	
 public:
 	void InitGameState() override;
-	
+
 private:
 	UPROPERTY(EditAnywhere, NoClear)
 	TSubclassOf<AMazeCharacter> DefaultPlayerCharacter = AMazeCharacter::StaticClass();
