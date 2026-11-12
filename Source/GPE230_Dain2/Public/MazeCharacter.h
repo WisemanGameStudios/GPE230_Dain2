@@ -23,14 +23,6 @@ protected:
 	// Current health of player
 	float _currentHealth;
 	
-	// Controls how fast our character moves.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-	float _moveSpeed = 600.0f;
-
-	// Controls how fast our character rotates.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-	float _rotationSpeed = 100.0f;
-	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
