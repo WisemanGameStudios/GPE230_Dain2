@@ -32,8 +32,3 @@ void ANPCEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
-void ANPCEnemy::DetectHit()
-{
-	
-}
-
