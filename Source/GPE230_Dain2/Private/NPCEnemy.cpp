@@ -3,6 +3,11 @@
 
 #include "NPCEnemy.h"
 
+void ANPCEnemy::DetectHit()
+{
+	
+}
+
 // Sets default values
 ANPCEnemy::ANPCEnemy()
 {

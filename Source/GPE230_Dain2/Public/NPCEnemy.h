@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+	// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -10,6 +10,9 @@ UCLASS()
 class GPE230_DAIN2_API ANPCEnemy : public ACharacter
 {
 	GENERATED_BODY()
+	
+	UFUNCTION(BlueprintCallable, Category = "Collision")
+		void DetectHit();
 
 public:
 	// Sets default values for this character's properties
@@ -25,5 +28,5 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
+
 };

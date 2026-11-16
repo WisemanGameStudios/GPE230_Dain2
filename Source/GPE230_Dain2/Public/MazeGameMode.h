@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "GameFramework/DefaultPawn.h"
 #include "MazeCharacter.h"
 #include "MazeGameMode.generated.h"
 
@@ -18,6 +17,7 @@ class GPE230_DAIN2_API AMazeGameMode : public AGameModeBase
 	
 public:
 	void InitGameState() override;
+	AMazeGameMode();
 
 private:
 	UPROPERTY(EditAnywhere, NoClear)
