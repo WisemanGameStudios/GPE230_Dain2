@@ -18,6 +18,12 @@ public:
 	// Starting Health
 	UPROPERTY(EditAnywhere)
 	float maxHealth;
+	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
 	// Current health of player
@@ -29,12 +35,11 @@ protected:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	
 	virtual void Die();
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	
+	
+	// Animation to play when player dies
+	UPROPERTY(EditAnywhere)
+		UAnimSequence* _deathAnim;
+	
+	bool _isDead = false;
 };

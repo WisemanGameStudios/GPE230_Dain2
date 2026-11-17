@@ -1,6 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "MazeGameMode.h"
 
+// Constructor
+AMazeGameMode::AMazeGameMode()
+{
+	// GameMode setup
+}
+
 void AMazeGameMode::InitGameState()
 {
 	Super::InitGameState();
