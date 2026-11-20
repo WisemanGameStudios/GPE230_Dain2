@@ -11,6 +11,29 @@ AMazeCharacter::AMazeCharacter()
 
 }
 
+
+void AMazeCharacter::Heal(float healthToAdd)
+{
+	// Do not heal the player if they are dead.
+	if (_isDead)
+	{
+		return;
+	}
+
+	// Add health without exceeding maxHealth.
+	_currentHealth = FMath::Clamp(
+		_currentHealth + healthToAdd,
+		0.0f,
+		maxHealth
+	);
+
+	// Display the updated health in the Output Log.
+	UE_LOG(LogTemp, Log,
+		TEXT("Player healed! Current Health: %f"),
+		_currentHealth);
+}
+
+
 // Called when the game starts or when spawned
 void AMazeCharacter::BeginPlay()
 {
@@ -70,4 +93,22 @@ void AMazeCharacter::Die()
 	GetMesh()->PlayAnimation(_deathAnim, false);
 	
 	// ToDo: Trigger game over 
+}
+
+void AMazeCharacter::ActivateStunParticleSystem()
+{
+	// Spawn a particle system and play it once
+	if (_stunSystem)
+	{
+		USceneComponent* AttachComp = GetDefaultAttachComponent();
+		
+		UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAttached(_stunSystem, AttachComp, NAME_None,
+			FVector(0), FRotator(0), EAttachLocation::Type::KeepRelativeOffset, true);
+		
+		NiagaraComp->Activate();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Player attempted to use stun ability, but no template particle system was found"));
+	}
 }

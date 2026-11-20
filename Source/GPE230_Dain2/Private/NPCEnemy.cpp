@@ -2,12 +2,17 @@
 
 
 #include "NPCEnemy.h"
+#include "MazeCharacter.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/DamageType.h"
 
 void ANPCEnemy::DetectHit()
 {
+	
+	UE_LOG(LogTemp, Warning,
+	TEXT("ENEMY ATTACK: DetectHit was called!"));
+	
 	bool canDamage = true;
 	
 	// Get fist location 
@@ -24,8 +29,11 @@ void ANPCEnemy::DetectHit()
 	// Trace around fist for overlapping actors
 	const bool Hit = UKismetSystemLibrary::SphereTraceMulti(GetWorld(), PunchLocation, PunchLocation, _TraceRadius, 
 		UEngineTypes::ConvertToTraceType(ECC_Camera), false, ActorsToIgnore, 
-		EDrawDebugTrace::None, HitArray, true, FLinearColor::Red, FLinearColor::Green, 2.0f
+		EDrawDebugTrace::None, HitArray, true,FLinearColor::Red, FLinearColor::Green, 2.0f
 		);
+	
+	UE_LOG(LogTemp, Warning, TEXT("SPHERE TRACE HIT: %s"),
+	Hit ? TEXT("TRUE") : TEXT("FALSE"));
 	
 	// Debugging name of this actor
 	FString ownerName = this->GetName();
@@ -35,7 +43,7 @@ void ANPCEnemy::DetectHit()
 		// For each Object Hit
 		for (const FHitResult &HitResult : HitArray)
 		{
-			if (canDamage)
+			if (canDamage && Cast<AMazeCharacter>(HitResult.GetActor()))
 			{
 				FString hitActorName = HitResult.GetActor()->GetName();
 
@@ -43,13 +51,20 @@ void ANPCEnemy::DetectHit()
 				UE_LOG(LogTemp, Log, TEXT("NPCEnemy actor \"%s\" hit other actor \"%s\", dealing %f damage"),
 					*ownerName, *hitActorName, _HitDamage);
 
-				// Apply generic damage
-				UGameplayStatics::ApplyDamage(
+				/// Apply damage to the actor that was hit.
+				float DamageApplied = UGameplayStatics::ApplyDamage(
 					HitResult.GetActor(),
 					_HitDamage,
 					GetController(),
 					this,
 					UDamageType::StaticClass()
+				);
+
+				// Show how much damage was actually applied.
+				UE_LOG(LogTemp, Warning,
+					TEXT("DAMAGE TEST: Applied %f damage to %s"),
+					DamageApplied,
+					*GetNameSafe(HitResult.GetActor())
 				);
 
 				canDamage = false;

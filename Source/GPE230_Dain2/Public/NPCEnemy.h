@@ -29,8 +29,8 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	UPROPERTY(EditAnywhere)
-		float _TraceRadius = 500.0f;
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	float _TraceRadius = 80.0f;
 	UPROPERTY(EditAnywhere)
 		FName _PunchingHandSocketName;
 	UPROPERTY(EditAnywhere)
