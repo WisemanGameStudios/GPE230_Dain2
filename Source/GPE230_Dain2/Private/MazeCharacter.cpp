@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "MazeCharacter.h"
+#include "TimerManager.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -57,6 +58,22 @@ void AMazeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 float AMazeCharacter::TakeDamage(float DamageAmount,FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
+	// Block all damage while the shield is active.
+	if (bShieldActive)
+	{
+		// Notify the player that damage was blocked.
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(
+				-1, 2.0f, FColor::Cyan,
+				TEXT("SHIELD BLOCKED DAMAGE!")
+			);
+		}
+
+		// Return zero damage.
+		return 0.0f;
+	}
+	
 	if (!_isDead)
 	{
 		// Subtract Damage
@@ -111,4 +128,81 @@ void AMazeCharacter::ActivateStunParticleSystem()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Player attempted to use stun ability, but no template particle system was found"));
 	}
+}
+
+// Activates temporary invincibility.
+void AMazeCharacter::ActivateShield(float Duration)
+{
+	UE_LOG(LogTemp, Warning, TEXT("ACTIVATE SHIELD CALLED"));
+	
+	// Turn on the shield.
+	bShieldActive = true;
+	
+	// Spawn particles attached to the player.
+	if (ShieldEffect)
+	{
+		GEngine->AddOnScreenDebugMessage(
+	-1, 5.0f, FColor::Green,
+	TEXT("SHIELD PARTICLES FOUND!")
+);
+		ActiveShieldEffect =
+			UNiagaraFunctionLibrary::SpawnSystemAttached(
+				ShieldEffect,
+				GetRootComponent(),
+				NAME_None,
+				FVector::ZeroVector,
+				FRotator::ZeroRotator,
+				EAttachLocation::KeepRelativeOffset,
+				false
+			);
+	}
+	
+
+	// Start or restart the shield timer.
+	GetWorldTimerManager().SetTimer(
+		ShieldTimerHandle,
+		this,
+		&AMazeCharacter::DeactivateShield,
+		Duration,
+		false
+	);
+	
+	if (IsValid(ActiveShieldEffect))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("SHIELD EFFECT SPAWNED"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("SHIELD EFFECT FAILED"));
+	}
+
+	
+
+	// Display a message on the screen.
+	GEngine->AddOnScreenDebugMessage(
+		-1, 3.0f, FColor::Cyan,
+		TEXT("SHIELD ACTIVATED!")
+	);
+	
+	
+}
+
+// Removes temporary invincibility.
+void AMazeCharacter::DeactivateShield()
+{
+	// Turn off the shield.
+	bShieldActive = false;
+	
+	// Remove the shield particles.
+	if (IsValid(ActiveShieldEffect))
+	{
+		ActiveShieldEffect->DestroyComponent();
+		ActiveShieldEffect = nullptr;
+	}
+
+	// Display a message on the screen.
+	GEngine->AddOnScreenDebugMessage(
+		-1, 3.0f, FColor::Red,
+		TEXT("SHIELD EXPIRED!")
+	);
 }

@@ -54,6 +54,14 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
+	// Activates the player's temporary shield.
+	UFUNCTION(BlueprintCallable, Category = "Shield")
+	void ActivateShield(float Duration);
+
+	// Deactivates the player's shield.
+	UFUNCTION(BlueprintCallable, Category = "Shield")
+	void DeactivateShield();
+	
 
 
 protected:
@@ -80,4 +88,19 @@ private:
 	
 	UFUNCTION(BlueprintCallable)
 	void ActivateStunParticleSystem();
+	
+	// Determines whether the player is protected.
+	UPROPERTY(VisibleAnywhere, Category = "Shield")
+	bool bShieldActive = false;
+
+	// Controls how long the shield remains active.
+	FTimerHandle ShieldTimerHandle;
+	
+	// Niagara particle system for the shield.
+	UPROPERTY(EditAnywhere, Category = "Shield Effects")
+	UNiagaraSystem* ShieldEffect = nullptr;
+
+	// Tracks the active shield particles.
+	UPROPERTY()
+	UNiagaraComponent* ActiveShieldEffect = nullptr;
 };
